@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.devertelo
+testFramework: junit
+sourceLanguage: java
+buildTool: maven
+features: [app-name, http-client-test, java, java-application, jdbc-hikari, junit, logback, maven, maven-enforcer-plugin, micronaut-aot, netty-server, postgres, properties, readme, serialization-jackson, shade, test-resources]
