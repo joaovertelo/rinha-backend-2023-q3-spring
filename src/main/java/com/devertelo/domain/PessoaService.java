@@ -1,39 +1,12 @@
 package com.devertelo.domain;
 
-import com.devertelo.controller.Pessoa;
-import com.devertelo.infrastructure.PessoaEntity;
-import com.devertelo.infrastructure.PessoaRepository;
-import org.springframework.stereotype.Service;
+import com.devertelo.controller.pessoa.Pessoa;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-public class PessoaService {
+public interface PessoaService {
+    Pessoa create(Pessoa pessoa);
 
-    private final PessoaRepository pessoaRepository;
+    List<Pessoa> getAll(String term);
 
-    public PessoaService(PessoaRepository pessoaRepository) {
-        this.pessoaRepository = pessoaRepository;
-    }
-
-    public Pessoa create(Pessoa pessoa) {
-        var stack = pessoa.stack() != null ? String.join(";", pessoa.stack()) : null;
-        var entity = new PessoaEntity(pessoa.apelido(), pessoa.nome(), pessoa.nascimento(), stack);
-        var entitySaved = pessoaRepository.save(entity);
-        return entityToDTO(entitySaved);
-    }
-
-    public List<Pessoa> getAll(String term) {
-
-        var entities = pessoaRepository.findByTerm(term);
-
-        return entities.stream().map(PessoaService::entityToDTO).collect(Collectors.toList());
-    }
-
-    private static Pessoa entityToDTO(PessoaEntity entity) {
-        var stacks = entity.getStack() != null ? Arrays.stream(entity.getStack().split(";")).toList() : null;
-        return new Pessoa(entity.getId(), entity.getApelido(), entity.getNome(), entity.getNascimento(), stacks);
-    }
 }

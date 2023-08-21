@@ -1,4 +1,4 @@
-package com.devertelo.controller;
+package com.devertelo.controller.pessoa;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
