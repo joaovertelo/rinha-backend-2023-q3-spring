@@ -1,0 +1,109 @@
+version: '3.9'
+name: 'rinha-backend'
+
+services:
+  api-1:
+    image: 'joaovertelo/rinha-backend:latest'
+    restart: on-failure
+    build:
+      context: .
+    hostname: api-1
+    environment:
+      - SERVER_PORT=8080
+      - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - HIKARI_CONNECTION_TIMEOUT=40000
+      - HIKARI_MAXIMUM_POOL_SIZE=300
+      - HIKARI_MINIMUM_IDLE=300
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    #      - cache
+    ulimits:
+      nofile:
+        soft: 1000000
+        hard: 1000000
+    deploy:
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: '1.25GB'
+    networks:
+      - app-network
+
+  api-2:
+    image: 'joaovertelo/rinha-backend:latest'
+    restart: on-failure
+    build:
+      context: .
+    hostname: api-2
+    environment:
+      - SERVER_PORT=8080
+      - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - HIKARI_CONNECTION_TIMEOUT=40000
+      - HIKARI_MAXIMUM_POOL_SIZE=300
+      - HIKARI_MINIMUM_IDLE=300
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    #      - cache
+    ulimits:
+      nofile:
+        soft: 1000000
+        hard: 1000000
+    deploy:
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: '1.25GB'
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-1
+      - api-2
+    ports:
+      - "9999:9999"
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: '0.25GB'
+
+  postgres-db:
+    image: postgres:latest
+    command: postgres -c 'max_connections=600'
+    container_name: rinha-backend-db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: '0.5GB'
+    networks:
+      - app-network
+
+networks:
+  app-network:

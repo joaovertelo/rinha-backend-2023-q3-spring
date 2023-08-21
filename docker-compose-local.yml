@@ -1,0 +1,24 @@
+version: '3.8'
+name: 'rinha-backend-spring'
+
+services:
+  postgres-db:
+    image: postgres:latest
+    container_name: rinha-backend-db
+    user: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: '0.5GB'
+    networks:
+      - app-network
+
+networks:
+  app-network:
