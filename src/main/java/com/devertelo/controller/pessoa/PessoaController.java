@@ -40,15 +40,15 @@ public class PessoaController {
     @GetMapping("/pessoas")
     public ResponseEntity<List<Pessoa>> get(@RequestParam String t) {
         if (t == null) {
-            return ResponseEntity.status(400).build();
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(pessoaService.getAll(t));
     }
 
     @GetMapping("/contagem-pessoas")
-    public ResponseEntity<String> get() {
-        return ResponseEntity.ok("ok");
+    public ResponseEntity<Long> get() {
+        return ResponseEntity.ok(pessoaService.count());
     }
 
 

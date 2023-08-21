@@ -13,4 +13,6 @@ public interface PessoaService {
 
     List<Pessoa> getAll(String term);
 
+    Long count();
+
 }

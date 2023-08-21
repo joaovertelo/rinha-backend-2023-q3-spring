@@ -1,26 +1,25 @@
 package com.devertelo.infrastructure;
 
-import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.UUID;
 
 
 @Repository
 public interface PessoaRepository extends JpaRepository<PessoaEntity, UUID>, JpaSpecificationExecutor<PessoaEntity> {
 
-    @Transactional
-    default List<PessoaEntity> findByTerm(String term) {
+    default Page<PessoaEntity> findByTerm(String term) {
 
         Specification<PessoaEntity> specification = Specifications.apelidoLike(term)
                 .or(Specifications.nameLike(term))
                 .or(Specifications.stackLike(term));
 
-        return findAll(specification);
+        return findAll(specification, Pageable.ofSize(2));
     }
 
     class Specifications {

@@ -38,9 +38,14 @@ public class PessoaServiceImpl implements PessoaService {
 
     public List<Pessoa> getAll(String term) {
         var entities = pessoaRepository.findByTerm(term);
-        return entities.stream()
+        return entities.get()
                 .map(this::entityToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long count() {
+        return pessoaRepository.count();
     }
 
     private PessoaEntity dtoToEntity(Pessoa pessoa) {
