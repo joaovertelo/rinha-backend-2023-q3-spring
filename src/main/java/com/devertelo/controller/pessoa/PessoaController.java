@@ -30,8 +30,11 @@ public class PessoaController {
     }
 
     @GetMapping("/pessoas/{id}")
-    public ResponseEntity<String> get(@PathVariable UUID id) {
-        return ResponseEntity.ok("teste");
+    public ResponseEntity<Pessoa> get(@PathVariable UUID id) {
+        var pessoa = pessoaService.getById(id);
+
+        return pessoa.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/pessoas")

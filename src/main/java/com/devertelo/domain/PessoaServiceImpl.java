@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,19 +30,25 @@ public class PessoaServiceImpl implements PessoaService {
         }
     }
 
-    public List<Pessoa> getAll(String term) {
-
-        var entities = pessoaRepository.findByTerm(term);
-
-        return entities.stream().map(PessoaServiceImpl::entityToDTO).collect(Collectors.toList());
+    @Override
+    public Optional<Pessoa> getById(UUID id) {
+        var entity = pessoaRepository.findById(id);
+        return entity.map(this::entityToDTO);
     }
 
-    private static PessoaEntity dtoToEntity(Pessoa pessoa) {
+    public List<Pessoa> getAll(String term) {
+        var entities = pessoaRepository.findByTerm(term);
+        return entities.stream()
+                .map(this::entityToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private PessoaEntity dtoToEntity(Pessoa pessoa) {
         var stack = pessoa.stack() != null ? String.join(";", pessoa.stack()) : null;
         return new PessoaEntity(pessoa.apelido(), pessoa.nome(), pessoa.nascimento(), stack);
     }
 
-    private static Pessoa entityToDTO(PessoaEntity entity) {
+    private Pessoa entityToDTO(PessoaEntity entity) {
         var stacks = entity.getStack() != null ? Arrays.stream(entity.getStack().split(";")).toList() : null;
         return new Pessoa(entity.getId(), entity.getApelido(), entity.getNome(), entity.getNascimento(), stacks);
     }
