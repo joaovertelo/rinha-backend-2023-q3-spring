@@ -1,10 +1,10 @@
 package com.devertelo.infrastructure;
 
-import io.micronaut.data.annotation.Repository;
-import io.micronaut.data.jpa.repository.JpaRepository;
-import io.micronaut.data.jpa.repository.JpaSpecificationExecutor;
-import io.micronaut.data.jpa.repository.criteria.Specification;
-import io.micronaut.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +24,10 @@ public interface PessoaRepository extends JpaRepository<PessoaEntity, UUID>, Jpa
     }
 
     class Specifications {
+
+        private Specifications() {
+        }
+
         public static Specification<PessoaEntity> apelidoLike(String apelido) {
             return (root, query, criteriaBuilder)
                     -> criteriaBuilder.like(root.get("apelido"), "%" + apelido + "%");

@@ -1,15 +1,15 @@
-package com.devertelo.controller.domain;
+package com.devertelo.domain;
 
 import com.devertelo.controller.Pessoa;
 import com.devertelo.infrastructure.PessoaEntity;
 import com.devertelo.infrastructure.PessoaRepository;
-import io.micronaut.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Bean
+@Service
 public class PessoaService {
 
     private final PessoaRepository pessoaRepository;

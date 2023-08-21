@@ -1,19 +1,25 @@
 version: '3.9'
-name: 'rinha-backend-micronaut'
+name: 'rinha-backend'
 
 services:
   api-1:
-    build: .
+    image: 'joaovertelo/rinha-backend:latest'
+    restart: on-failure
+    build:
+      context: .
     hostname: api-1
     environment:
       - SERVER_PORT=8080
-      - DATABASE_URL=jdbc:postgresql://db:5432/postgres
+      - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-#      - REDIS_HOST=cache
+      - HIKARI_CONNECTION_TIMEOUT=40000
+      - HIKARI_MAXIMUM_POOL_SIZE=300
+      - HIKARI_MINIMUM_IDLE=300
     depends_on:
-      - db
-#      - cache
+      postgres-db:
+        condition: service_healthy
+    #      - cache
     ulimits:
       nofile:
         soft: 1000000
@@ -27,17 +33,23 @@ services:
       - app-network
 
   api-2:
-    build: .
+    image: 'joaovertelo/rinha-backend:latest'
+    restart: on-failure
+    build:
+      context: .
     hostname: api-2
     environment:
       - SERVER_PORT=8080
-      - DATABASE_URL=jdbc:postgresql://db:5432/postgres
+      - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-#      - REDIS_HOST=cache
+      - HIKARI_CONNECTION_TIMEOUT=40000
+      - HIKARI_MAXIMUM_POOL_SIZE=300
+      - HIKARI_MINIMUM_IDLE=300
     depends_on:
-      - db
-#      - cache
+      postgres-db:
+        condition: service_healthy
+    #      - cache
     ulimits:
       nofile:
         soft: 1000000
@@ -67,31 +79,25 @@ services:
           cpus: '0.2'
           memory: '0.25GB'
 
-#  cache:
-#    hostname: cache
-#    image: redis:latest
-#    command: ["redis-server", "--appendonly", "no", "--save ''"]
-#    ports:
-#      - '6379:6379'
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.05'
-#          memory: '0.25GB'
-#    networks:
-#      - app-network
-
-  db:
+  postgres-db:
     image: postgres:latest
+    command: postgres -c 'max_connections=600'
     container_name: rinha-backend-db
-    hostname: db
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_DB=postgres
-    ports:
-      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 3s
+      timeout: 5s
+      retries: 10
     deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
       resources:
         limits:
           cpus: '0.05'
