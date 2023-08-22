@@ -13,10 +13,10 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-      - HIKARI_CONNECTION_TIMEOUT=40000
+      - HIKARI_CONNECTION_TIMEOUT=200000
       - HIKARI_MAXIMUM_POOL_SIZE=250
-      - HIKARI_MINIMUM_IDLE=20
-      - HIKARI_MAX_LIFETIME=120000
+      - HIKARI_MINIMUM_IDLE=10
+      - HIKARI_MAX_LIFETIME=1800000
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -28,8 +28,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.8'
-          memory: '1.25GB'
+          cpus: '0.3'
+          memory: '1.0GB'
     networks:
       - app-network
 
@@ -44,10 +44,10 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-      - HIKARI_CONNECTION_TIMEOUT=40000
+      - HIKARI_CONNECTION_TIMEOUT=200000
       - HIKARI_MAXIMUM_POOL_SIZE=250
-      - HIKARI_MINIMUM_IDLE=20
-      - HIKARI_MAX_LIFETIME=120000
+      - HIKARI_MINIMUM_IDLE=10
+      - HIKARI_MAX_LIFETIME=1800000
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -59,8 +59,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.8'
-          memory: '1.25GB'
+          cpus: '0.3'
+          memory: '1.1GB'
     networks:
       - app-network
 
@@ -78,8 +78,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
-          memory: '0.25GB'
+          cpus: '0.1'
+          memory: '0.1GB'
 
   postgres-db:
     image: postgres:latest
@@ -102,7 +102,7 @@ services:
         window: 60s
       resources:
         limits:
-          cpus: '0.5'
+          cpus: '0.8'
           memory: '0.5GB'
     networks:
       - app-network
