@@ -4,9 +4,9 @@
 # curl -v -XGET "http://localhost:9999/pessoas?t=xpto"
 # curl -v "http://localhost:9999/contagem-pessoas"
 
-GATLING_BIN_DIR=$HOME/gatling/3.9.5/bin
+GATLING_BIN_DIR=/home/vertelo/dev/gatling-charts-highcharts-bundle-3.9.5/bin
 
-WORKSPACE=$HOME/projects/rinha-de-backend-2023-q3/stress-test
+WORKSPACE=/home/vertelo/dev/repo/rinha-backend-2023-q3-spring/stress-test
 
 sh $GATLING_BIN_DIR/gatling.sh -rm local -s RinhaBackendSimulation \
     -rd "DESCRICAO" \
