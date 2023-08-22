@@ -27,7 +27,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.35'
+          cpus: '0.3'
           memory: '900MB'
     networks:
       - app-network
@@ -57,7 +57,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.35'
+          cpus: '0.3'
           memory: '900MB'
     networks:
       - app-network
@@ -99,7 +99,7 @@ services:
 
   postgres-db:
     image: postgres:latest
-    command: 'postgres -c max_connections=250 -c shared_buffers=256MB -c synchronous_commit=off -c fsync=off -c full_page_writes=off'
+    command: 'postgres -c max_connections=400 -c shared_buffers=256MB -c synchronous_commit=off -c fsync=off -c full_page_writes=off'
     container_name: rinha-backend-db
     environment:
       - POSTGRES_PASSWORD=postgres
@@ -118,7 +118,7 @@ services:
         window: 60s
       resources:
         limits:
-          cpus: '0.65'
+          cpus: '0.75'
           memory: '900MB'
     networks:
       - app-network
