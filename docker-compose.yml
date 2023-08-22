@@ -28,7 +28,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.3'
+          cpus: '0.6'
           memory: '1.0GB'
     networks:
       - app-network
@@ -59,8 +59,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.3'
-          memory: '1.1GB'
+          cpus: '0.6'
+          memory: '1.0GB'
     networks:
       - app-network
 
@@ -79,7 +79,7 @@ services:
       resources:
         limits:
           cpus: '0.1'
-          memory: '0.1GB'
+          memory: '0.3GB'
 
   postgres-db:
     image: postgres:latest
@@ -102,8 +102,8 @@ services:
         window: 60s
       resources:
         limits:
-          cpus: '0.8'
-          memory: '0.5GB'
+          cpus: '1.3'
+          memory: '0.7GB'
     networks:
       - app-network
 

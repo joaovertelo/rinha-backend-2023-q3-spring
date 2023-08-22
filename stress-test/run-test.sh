@@ -4,9 +4,9 @@
 # curl -v -XGET "http://localhost:9999/pessoas?t=xpto"
 # curl -v "http://localhost:9999/contagem-pessoas"
 
-GATLING_BIN_DIR=${PWD}/stress-test/gatling/bin
+GATLING_BIN_DIR=${PWD}/gatling/bin
 
-WORKSPACE=${PWD}/stress-test
+WORKSPACE=${PWD}
 
 sh $GATLING_BIN_DIR/gatling.sh -rm local -s RinhaBackendSimulation \
     -rd "DESCRICAO" \
