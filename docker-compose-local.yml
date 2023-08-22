@@ -17,6 +17,8 @@ services:
         limits:
           cpus: '0.05'
           memory: '0.5GB'
+    volumes:
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     networks:
       - app-network
   cache:
