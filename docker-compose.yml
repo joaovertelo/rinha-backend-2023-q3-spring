@@ -13,11 +13,10 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-      - HIKARI_CONNECTION_TIMEOUT=200000
-      - HIKARI_MAXIMUM_POOL_SIZE=250
-      - HIKARI_MINIMUM_IDLE=10
-      - HIKARI_MAX_LIFETIME=1800000
+      - REDIS_HOST=cache
     depends_on:
+      cache:
+        condition: service_healthy
       postgres-db:
         condition: service_healthy
     #      - cache
@@ -28,7 +27,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.4'
+          cpus: '0.35'
           memory: '900MB'
     networks:
       - app-network
@@ -44,11 +43,10 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-      - HIKARI_CONNECTION_TIMEOUT=200000
-      - HIKARI_MAXIMUM_POOL_SIZE=250
-      - HIKARI_MINIMUM_IDLE=10
-      - HIKARI_MAX_LIFETIME=1800000
+      - REDIS_HOST=cache
     depends_on:
+      cache:
+        condition: service_healthy
       postgres-db:
         condition: service_healthy
     #      - cache
@@ -59,7 +57,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.4'
+          cpus: '0.35'
           memory: '900MB'
     networks:
       - app-network
@@ -80,6 +78,22 @@ services:
         limits:
           cpus: '0.1'
           memory: '256MB'
+
+  cache:
+    hostname: cache
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: '250MB'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    networks:
+      - app-network
 
   postgres-db:
     image: postgres:latest
@@ -102,7 +116,7 @@ services:
         window: 60s
       resources:
         limits:
-          cpus: '0.6'
+          cpus: '0.65'
           memory: '900MB'
     networks:
       - app-network

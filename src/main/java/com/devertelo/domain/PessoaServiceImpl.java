@@ -26,7 +26,7 @@ public class PessoaServiceImpl implements PessoaService {
             var entitySaved = pessoaRepository.save(entity);
             return entityToDTO(entitySaved);
         } catch (DataIntegrityViolationException exception) {
-            throw new AlreadyExistsException(exception);
+            throw new AlreadyExistsException();
         }
     }
 
