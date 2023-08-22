@@ -17,14 +17,4 @@ public class ErrorHandling {
     public String handleConstraintViolation(MethodArgumentNotValidException exception) {
         return "Request Inválida";
     }
-
-
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(AlreadyExistsException.class)
-//    public String handleConstraintViolation(AlreadyExistsException exception) {
-//
-//        return "Request Inválida";
-//    }
-
-
 }
