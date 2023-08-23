@@ -13,10 +13,10 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-      - HIKARI_CONNECTION_TIMEOUT=40000
-      - HIKARI_MAXIMUM_POOL_SIZE=300
-      - HIKARI_MINIMUM_IDLE=300
+      - REDIS_HOST=cache
     depends_on:
+      cache:
+        condition: service_healthy
       postgres-db:
         condition: service_healthy
     #      - cache
@@ -27,8 +27,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.8'
-          memory: '1.25GB'
+          cpus: '0.4'
+          memory: '0.7GB'
     networks:
       - app-network
 
@@ -43,10 +43,10 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-      - HIKARI_CONNECTION_TIMEOUT=40000
-      - HIKARI_MAXIMUM_POOL_SIZE=300
-      - HIKARI_MINIMUM_IDLE=300
+      - REDIS_HOST=cache
     depends_on:
+      cache:
+        condition: service_healthy
       postgres-db:
         condition: service_healthy
     #      - cache
@@ -57,8 +57,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.8'
-          memory: '1.25GB'
+          cpus: '0.4'
+          memory: '0.7GB'
     networks:
       - app-network
 
@@ -76,13 +76,32 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'
-          memory: '0.25GB'
+          cpus: '0.1'
+          memory: '0.1GB'
+
+  cache:
+    hostname: cache
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: '0.1GB'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+    networks:
+      - app-network
 
   postgres-db:
     image: postgres:latest
-    command: postgres -c 'max_connections=600'
+    command: 'postgres -c max_connections=600' #      -c shared_buffers=256MB -c synchronous_commit=off -c fsync=off -c full_page_writes=off
     container_name: rinha-backend-db
+    user: postgres
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
@@ -100,8 +119,10 @@ services:
         window: 60s
       resources:
         limits:
-          cpus: '0.05'
-          memory: '0.5GB'
+          cpus: '0.55'
+          memory: '1.4GB'
+    volumes:
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     networks:
       - app-network
 

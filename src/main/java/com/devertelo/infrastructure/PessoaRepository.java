@@ -19,7 +19,7 @@ public interface PessoaRepository extends JpaRepository<PessoaEntity, UUID>, Jpa
                 .or(Specifications.nameLike(term))
                 .or(Specifications.stackLike(term));
 
-        return findAll(specification, Pageable.ofSize(2));
+        return findAll(specification, Pageable.ofSize(50));
     }
 
     class Specifications {
