@@ -3,7 +3,7 @@ name: 'rinha-backend'
 
 services:
   api-1:
-    image: 'joaovertelo/rinha-backend:1.0'
+    image: 'joaovertelo/rinha-backend:latest'
     restart: on-failure
     build:
       context: .
@@ -33,7 +33,7 @@ services:
       - app-network
 
   api-2:
-    image: 'joaovertelo/rinha-backend:1.0'
+    image: 'joaovertelo/rinha-backend:latest'
     restart: on-failure
     build:
       context: .
