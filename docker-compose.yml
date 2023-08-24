@@ -75,7 +75,7 @@ services:
       resources:
         limits:
           cpus: '0.1'
-          memory: '0.1GB'
+          memory: '0.3GB'
 
   cache:
     hostname: cache
@@ -118,7 +118,7 @@ services:
       resources:
         limits:
           cpus: '0.6'
-          memory: '1.4GB'
+          memory: '1.2GB'
     volumes:
       - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     networks:

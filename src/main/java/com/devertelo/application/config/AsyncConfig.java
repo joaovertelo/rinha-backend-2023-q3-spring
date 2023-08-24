@@ -26,9 +26,4 @@ public class AsyncConfig implements AsyncConfigurer {
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new SimpleAsyncUncaughtExceptionHandler();
     }
-
-//    @Bean(name = "threadPoolTaskExecutor")
-//    public Executor threadPoolTaskExecutor() {
-//        return new ThreadPoolTaskExecutor();
-//    }
 }

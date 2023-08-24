@@ -13,3 +13,5 @@ out/
 .settings
 .classpath
 .factorypath
+stress-test/gatling/results/
+stress-test/gatling/target/
