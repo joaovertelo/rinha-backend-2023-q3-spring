@@ -27,7 +27,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: '0.35'
           memory: '0.7GB'
     networks:
       - app-network
@@ -57,7 +57,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: '0.35'
           memory: '0.7GB'
     networks:
       - app-network
@@ -76,7 +76,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'
+          cpus: '0.1'
           memory: '0.1GB'
 
   cache:
@@ -119,7 +119,7 @@ services:
         window: 60s
       resources:
         limits:
-          cpus: '1'
+          cpus: '0.6'
           memory: '1.4GB'
     volumes:
       - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
