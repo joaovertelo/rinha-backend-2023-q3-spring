@@ -1,74 +1,42 @@
 package com.devertelo.infrastructure;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
-@Table(name = "pessoa")
-public class PessoaEntity implements Serializable {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table("pessoa")
+public class PessoaEntity implements Persistable<UUID>, Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(value = "id")
     private UUID id;
-    @Column(name = "apelido", unique = true, length = 32)
+    @Column(value = "apelido")
     private String apelido;
-    @Column(name = "nome", nullable = false, length = 100)
+    @Column(value = "nome")
     private String nome;
-    @Column(name = "nascimento", nullable = false)
+    @Column(value = "nascimento")
     private String nascimento;
-    @Column(name = "stack")
+    @Column(value = "stack")
     private String stack;
+    @Transient
+    private boolean novo;
 
-    public PessoaEntity() {
-    }
-
-    public PessoaEntity(String apelido, String nome, String nascimento, String stack) {
-        this.apelido = apelido;
-        this.nome = nome;
-        this.nascimento = nascimento;
-        this.stack = stack;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getApelido() {
-        return apelido;
-    }
-
-    public void setApelido(String apelido) {
-        this.apelido = apelido;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getNascimento() {
-        return nascimento;
-    }
-
-    public void setNascimento(String nascimento) {
-        this.nascimento = nascimento;
-    }
-
-    public String getStack() {
-        return stack;
-    }
-
-    public void setStack(String stack) {
-        this.stack = stack;
+    @Override
+    public boolean isNew() {
+        return novo;
     }
 
     @Override
@@ -94,4 +62,6 @@ public class PessoaEntity implements Serializable {
                 ", stack=" + stack +
                 '}';
     }
+
+
 }

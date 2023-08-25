@@ -5,12 +5,11 @@ import com.devertelo.infrastructure.PessoaEntity;
 import com.devertelo.infrastructure.PessoaRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -21,41 +20,40 @@ public class PessoaServiceImpl implements PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-    public void create(Pessoa pessoa) {
+    public Mono<Pessoa> create(com.devertelo.controller.pessoa.Pessoa pessoa) {
         var entity = dtoToEntity(pessoa);
-        try {
-            pessoaRepository.save(entity);
-        } catch (DataIntegrityViolationException exception) {
-            log.error("Erro ao salvar pessoa id {}", pessoa.id());
-//            throw new AlreadyExistsException();
-        }
+        return pessoaRepository.save(entity)
+                .map(this::entityToDTO);
     }
 
     @Override
-    public Optional<Pessoa> getById(UUID id) {
-        var entity = pessoaRepository.findById(id);
-        return entity.map(this::entityToDTO);
+    public Mono<com.devertelo.controller.pessoa.Pessoa> getById(UUID id) {
+        Mono<PessoaEntity> byId = pessoaRepository.findById(id);
+        return byId
+                .map(this::entityToDTO)
+                .switchIfEmpty(Mono.empty());
     }
 
-    public List<Pessoa> getAll(String term) {
-        var entities = pessoaRepository.findByTerm(term);
-        return entities.get()
+    public Mono<List<com.devertelo.controller.pessoa.Pessoa>> getAll(String term) {
+//        var entities = pessoaRepository.findByTerm(term);
+        var entities = pessoaRepository.findAll();
+        return entities
                 .map(this::entityToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Long count() {
+    public Mono<Long> count() {
         return pessoaRepository.count();
     }
 
-    private PessoaEntity dtoToEntity(Pessoa pessoa) {
+    private PessoaEntity dtoToEntity(com.devertelo.controller.pessoa.Pessoa pessoa) {
         var stack = pessoa.stack() != null ? String.join(";", pessoa.stack()) : null;
-        return new PessoaEntity(pessoa.apelido(), pessoa.nome(), pessoa.nascimento(), stack);
+        return new PessoaEntity(pessoa.id(), pessoa.apelido(), pessoa.nome(), pessoa.nascimento(), stack, true);
     }
 
-    private Pessoa entityToDTO(PessoaEntity entity) {
+    private com.devertelo.controller.pessoa.Pessoa entityToDTO(PessoaEntity entity) {
         var stacks = entity.getStack() != null ? Arrays.stream(entity.getStack().split(";")).toList() : null;
-        return new Pessoa(entity.getId(), entity.getApelido(), entity.getNome(), entity.getNascimento(), stacks);
+        return new com.devertelo.controller.pessoa.Pessoa(entity.getId(), entity.getApelido(), entity.getNome(), entity.getNascimento(), stacks);
     }
 }

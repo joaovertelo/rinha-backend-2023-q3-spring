@@ -8,8 +8,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,49 +26,49 @@ public class PessoaController {
 
 
     @PostMapping("/pessoas")
-    public ResponseEntity<Pessoa> post(@RequestBody @Valid Pessoa requestBody) {
+    public Mono<ResponseEntity<Pessoa>> post(@RequestBody @Valid Pessoa requestBody) {
         if (redisTemplate.opsForValue().get(requestBody.apelido()) != null) {
             throw new AlreadyExistsException();
         }
         var pessoa = requestBody.withId(UUID.randomUUID());
 
-        pessoaService.create(pessoa);
 
-        var uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(pessoa.id())
-                .toUri();
+//        var uri = ServletUriComponentsBuilder.fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(pessoa.id())
+//                .toUri();
+
+        URI uri = UriComponentsBuilder.fromPath("/pessoas").build(pessoa.id().toString());
 
         redisTemplate.opsForValue().set(pessoa.id().toString(), pessoa);
         redisTemplate.opsForValue().set(pessoa.apelido(), pessoa);
 
-        return ResponseEntity.created(uri).body(pessoa);
+        return pessoaService.create(pessoa).map(it -> ResponseEntity.created(uri).body(it));
     }
 
     @GetMapping("/pessoas/{id}")
-    public ResponseEntity<Pessoa> get(@PathVariable UUID id) {
+    public Mono<ResponseEntity<Pessoa>> getBydId(@PathVariable UUID id) {
         var cache = redisTemplate.opsForValue().get(id.toString());
         if (cache != null) {
-            return ResponseEntity.ok(cache);
+            return Mono.just(ResponseEntity.ok(cache));
         }
         var pessoa = pessoaService.getById(id);
 
         return pessoa.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+                .defaultIfEmpty(ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/pessoas")
-    public ResponseEntity<List<Pessoa>> get(@RequestParam(required = false) String t) {
+    public Mono<ResponseEntity<List<Pessoa>>> get(@RequestParam(required = false) String t) {
         if (t == null) {
-            return ResponseEntity.badRequest().build();
+            return Mono.just(ResponseEntity.badRequest().build());
         }
-
-        return ResponseEntity.ok(pessoaService.getAll(t));
+        return pessoaService.getAll(t).map(ResponseEntity::ok);
     }
 
     @GetMapping("/contagem-pessoas")
-    public ResponseEntity<Long> get() {
-        return ResponseEntity.ok(pessoaService.count());
+    public Mono<ResponseEntity<Long>> get() {
+        return pessoaService.count().map(ResponseEntity::ok);
     }
 
 

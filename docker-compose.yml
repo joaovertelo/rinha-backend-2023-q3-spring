@@ -9,7 +9,7 @@ services:
     hostname: api-1
     environment:
       - SERVER_PORT=8080
-      - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
+      - DATABASE_URL=r2dbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
       - REDIS_HOST=cache
@@ -38,7 +38,7 @@ services:
     hostname: api-2
     environment:
       - SERVER_PORT=8080
-      - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
+      - DATABASE_URL=r2dbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
       - REDIS_HOST=cache
