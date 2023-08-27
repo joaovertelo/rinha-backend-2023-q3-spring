@@ -26,8 +26,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.35'
-          memory: '0.7GB'
+          cpus: '1'
+          memory: '1GB'
     networks:
       - app-network
 
@@ -55,8 +55,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.35'
-          memory: '0.7GB'
+          cpus: '1'
+          memory: '1GB'
     networks:
       - app-network
 
@@ -74,8 +74,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
-          memory: '0.3GB'
+          cpus: '0.3'
+          memory: '0.5GB'
 
   cache:
     hostname: cache
@@ -85,8 +85,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
-          memory: '0.1GB'
+          cpus: '0.2'
+          memory: '0.2GB'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
@@ -117,8 +117,8 @@ services:
         window: 60s
       resources:
         limits:
-          cpus: '0.6'
-          memory: '1.2GB'
+          cpus: '1'
+          memory: '2GB'
     volumes:
       - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     networks:

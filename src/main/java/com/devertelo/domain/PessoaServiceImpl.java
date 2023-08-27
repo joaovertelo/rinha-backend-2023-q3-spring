@@ -35,8 +35,8 @@ public class PessoaServiceImpl implements PessoaService {
     }
 
     public Mono<List<com.devertelo.controller.pessoa.Pessoa>> getAll(String term) {
-//        var entities = pessoaRepository.findByTerm(term);
-        var entities = pessoaRepository.findAll();
+        var entities = pessoaRepository.findAllByTerm(term);
+//        var entities = pessoaRepository.findAll();
         return entities
                 .map(this::entityToDTO)
                 .collect(Collectors.toList());

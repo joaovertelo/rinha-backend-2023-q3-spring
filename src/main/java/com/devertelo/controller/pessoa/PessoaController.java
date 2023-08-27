@@ -38,7 +38,7 @@ public class PessoaController {
 //                .buildAndExpand(pessoa.id())
 //                .toUri();
 
-        URI uri = UriComponentsBuilder.fromPath("/pessoas").build(pessoa.id().toString());
+        URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9999/pessoas/{id}").build(pessoa.id().toString());
 
         redisTemplate.opsForValue().set(pessoa.id().toString(), pessoa);
         redisTemplate.opsForValue().set(pessoa.apelido(), pessoa);
