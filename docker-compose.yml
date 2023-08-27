@@ -12,13 +12,9 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-      - REDIS_HOST=cache
     depends_on:
-      cache:
-        condition: service_healthy
       postgres-db:
         condition: service_healthy
-    #      - cache
     ulimits:
       nofile:
         soft: 1000000
@@ -41,13 +37,9 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-      - REDIS_HOST=cache
     depends_on:
-      cache:
-        condition: service_healthy
       postgres-db:
         condition: service_healthy
-    #      - cache
     ulimits:
       nofile:
         soft: 1000000
@@ -76,24 +68,6 @@ services:
         limits:
           cpus: '0.1'
           memory: '0.1GB'
-
-  cache:
-    hostname: cache
-    image: redis:latest
-    ports:
-      - '6379:6379'
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: '0.1GB'
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
-    healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-    networks:
-      - app-network
 
   postgres-db:
     image: postgres:latest
