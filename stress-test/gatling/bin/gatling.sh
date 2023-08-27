@@ -27,7 +27,7 @@ cd "${BIN_DIR}/.." && DEFAULT_GATLING_HOME=$(pwd) && cd "${OLDDIR}"
 
 GATLING_HOME="${GATLING_HOME:=${DEFAULT_GATLING_HOME}}"
 
-JAVA_OPTS="${JAVA_OPTS} -Xms32M -Xmx128M"
+JAVA_OPTS="${JAVA_OPTS} -Xms2g -Xmx3g"
 
 # Setup classpath
 CLASSPATH="$GATLING_HOME/lib/*"

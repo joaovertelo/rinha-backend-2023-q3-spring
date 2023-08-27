@@ -40,7 +40,7 @@ goto :noHome
 
 echo GATLING_HOME is set to "%GATLING_HOME%"
 
-set JAVA_OPTS=%JAVA_OPTS% -Xms32M -Xmx128M
+set JAVA_OPTS=%JAVA_OPTS% -Xms2g -Xmx3g
 
 set CLASSPATH="%GATLING_HOME%"\lib\*
 

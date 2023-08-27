@@ -7,7 +7,7 @@ $Env:GATLING_HOME = Join-Path $ScriptDir "gatling"
 $GatlingBinDir = Join-Path $Env:GATLING_HOME "bin"
 $Workspace = $ScriptDir
 
-& "$GatlingBinDir\gatling.bat" -rm local -s RinhaBackendSimulation `
+& "$GatlingBinDir\gatling.bat" -rm local -s RinhaBackendSimulation -Xms2g -Xmx3g `
     -rd "DESCRICAO" `
     -rf "$Workspace\user-files\results" `
     -sf "$Workspace\user-files\simulations" `
