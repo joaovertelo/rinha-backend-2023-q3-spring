@@ -53,7 +53,7 @@ public class PessoaController {
     }
 
     @GetMapping("/pessoas")
-    public ResponseEntity<List<Pessoa>> get(@RequestParam String t) {
+    public ResponseEntity<List<Pessoa>> get(@RequestParam(required = false) String t) {
         if (t == null) {
             return ResponseEntity.badRequest().build();
         }
