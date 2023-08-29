@@ -24,20 +24,23 @@ public class PessoaController {
 
 
     @PostMapping("/pessoas")
-    public ResponseEntity<Pessoa> post(@RequestBody @Valid Pessoa pessoa) {
-        if (redisTemplate.opsForValue().get(pessoa.apelido()) != null) {
+    public ResponseEntity<Pessoa> post(@RequestBody @Valid Pessoa requestBody) {
+        if (redisTemplate.opsForValue().get(requestBody.apelido()) != null) {
             throw new AlreadyExistsException();
         }
-        var responseBody = pessoaService.create(pessoa);
+        var pessoa = requestBody.withId(UUID.randomUUID());
+
+        pessoaService.create(pessoa);
+
         var uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(responseBody.id())
+                .buildAndExpand(pessoa.id())
                 .toUri();
 
-        redisTemplate.opsForValue().set(responseBody.id().toString(), responseBody);
-        redisTemplate.opsForValue().set(responseBody.apelido(), responseBody);
-        return ResponseEntity.created(uri)
-                .body(responseBody);
+        redisTemplate.opsForValue().set(pessoa.id().toString(), pessoa);
+        redisTemplate.opsForValue().set(pessoa.apelido(), pessoa);
+
+        return ResponseEntity.created(uri).body(pessoa);
     }
 
     @GetMapping("/pessoas/{id}")

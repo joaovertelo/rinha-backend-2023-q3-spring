@@ -13,4 +13,8 @@ public record Pessoa(
         @Size(max = 100) @NotNull String nome,
         String nascimento,
         List<String> stack) implements Serializable {
+
+    Pessoa withId(UUID uuid) {
+        return new Pessoa(uuid, apelido, nome, nascimento, stack);
+    }
 }

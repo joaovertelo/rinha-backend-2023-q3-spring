@@ -1,10 +1,10 @@
 package com.devertelo.domain;
 
-import com.devertelo.application.exceptions.AlreadyExistsException;
 import com.devertelo.controller.pessoa.Pessoa;
 import com.devertelo.infrastructure.PessoaEntity;
 import com.devertelo.infrastructure.PessoaRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -14,19 +14,20 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class PessoaServiceImpl implements PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-    public Pessoa create(Pessoa pessoa) {
+    public void create(Pessoa pessoa) {
         var entity = dtoToEntity(pessoa);
         try {
-            var entitySaved = pessoaRepository.save(entity);
-            return entityToDTO(entitySaved);
+            pessoaRepository.save(entity);
         } catch (DataIntegrityViolationException exception) {
-            throw new AlreadyExistsException();
+            log.error("Erro ao salvar pessoa id {}", pessoa.id());
+//            throw new AlreadyExistsException();
         }
     }
 

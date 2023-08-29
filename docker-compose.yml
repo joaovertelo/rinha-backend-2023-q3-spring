@@ -3,7 +3,7 @@ name: 'rinha-backend'
 
 services:
   api-1:
-#    image: 'joaovertelo/rinha-backend:1.0'
+#    image: 'joaovertelo/rinha-backend:latest'
     build:
       context: .
     hostname: api-1
@@ -32,7 +32,7 @@ services:
       - app-network
 
   api-2:
-#    image: 'joaovertelo/rinha-backend:1.0'
+#    image: 'joaovertelo/rinha-backend:latest'
     build:
       context: .
     hostname: api-2
