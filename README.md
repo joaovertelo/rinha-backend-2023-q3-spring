@@ -1,5 +1,7 @@
 # rinha-backend-2023-spring
 
+![](./rinha-backend.png)
+
 Repositório do desafio [Rinha de Backend 2023 Q3](https://github.com/zanfranceschi/rinha-de-backend-2023-q3)
 
 Fiz um vídeo falando sobre as minhas implementações para o desafio Rinha de Backend e você pode assisti-lo a partir
