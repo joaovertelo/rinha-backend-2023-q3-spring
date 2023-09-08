@@ -23,6 +23,8 @@ public class PessoaController {
     private final RedisTemplate<String, Pessoa> redisTemplate;
 
 
+
+
     @PostMapping("/pessoas")
     public ResponseEntity<Pessoa> post(@RequestBody @Valid Pessoa pessoa) {
         if (redisTemplate.opsForValue().get(pessoa.apelido()) != null) {

@@ -15,16 +15,22 @@ public interface PessoaRepository extends JpaRepository<PessoaEntity, UUID>, Jpa
 
     default Page<PessoaEntity> findByTerm(String term) {
 
-        Specification<PessoaEntity> specification = Specifications.apelidoLike(term)
-                .or(Specifications.nameLike(term))
-                .or(Specifications.stackLike(term));
+//        Specification<PessoaEntity> specification = Specifications.apelidoLike(term)
+//                .or(Specifications.nameLike(term))
+//                .or(Specifications.stackLike(term));
 
-        return findAll(specification, Pageable.ofSize(50));
+
+        return findAll(Specifications.searchLike(term), Pageable.ofSize(50));
     }
 
     class Specifications {
 
         private Specifications() {
+        }
+
+        public static Specification<PessoaEntity> searchLike(String term) {
+            return (root, query, criteriaBuilder)
+                    -> criteriaBuilder.like(root.get("search"), "%" + term + "%");
         }
 
         public static Specification<PessoaEntity> apelidoLike(String apelido) {

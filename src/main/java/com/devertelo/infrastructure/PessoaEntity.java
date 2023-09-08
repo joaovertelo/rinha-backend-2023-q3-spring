@@ -20,6 +20,8 @@ public class PessoaEntity implements Serializable {
     private String nascimento;
     @Column(name = "stack")
     private String stack;
+    @Column(name = "search")
+    private String search;
 
     public PessoaEntity() {
     }
@@ -29,6 +31,7 @@ public class PessoaEntity implements Serializable {
         this.nome = nome;
         this.nascimento = nascimento;
         this.stack = stack;
+        this.search = apelido + nome + stack;
     }
 
     public UUID getId() {
@@ -67,6 +70,14 @@ public class PessoaEntity implements Serializable {
         return stack;
     }
 
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
+
     public void setStack(String stack) {
         this.stack = stack;
     }
@@ -91,7 +102,8 @@ public class PessoaEntity implements Serializable {
                 ", apelido='" + apelido + '\'' +
                 ", nome='" + nome + '\'' +
                 ", nascimento='" + nascimento + '\'' +
-                ", stack=" + stack +
+                ", stack='" + stack + '\'' +
+                ", search='" + search + '\'' +
                 '}';
     }
 }
